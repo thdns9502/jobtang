@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <<!DOCTYPE html>
 <head>
   <meta charset="utf-8">
@@ -28,14 +27,10 @@
 
   <!-- Template Main CSS File -->
   <link href="resources/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+  
+  <!-- 네이버 로그인 -->
+  <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 </head>
 
 <body>
@@ -94,7 +89,17 @@
                       <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>
                     </div>
                   </form>
-
+                  <!-- 네이버 로그인-->
+				  <div id="naver_id_login"></div>
+				   <script type="text/javascript">
+				  	var naver_id_login = new naver_id_login("oH0Wj3DkR7GR6Co0XFJz", "http://localhost:8080/naver");
+				  	var state = naver_id_login.getUniqState();
+				  	naver_id_login.setButton("white", 2,40);
+				  	naver_id_login.setDomain("");
+				  	naver_id_login.setState(state);
+				  	naver_id_login.setPopup();
+				  	naver_id_login.init_naver_id_login();
+				  </script>
                 </div>
               </div>
 
@@ -131,5 +136,37 @@
   <script src="resources/js/main.js"></script>
 
 </body>
+<script type="text/javascript">
+function receiveData(email, nickname, age) {
+	const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'http://localhost:8080/main';
+
+    // 이메일, 닉네임, 나이 입력 필드 추가
+    const emailInput = document.createElement('input');
+    emailInput.type = 'hidden';
+    emailInput.name = 'email';
+    emailInput.value = email;
+
+    const nicknameInput = document.createElement('input');
+    nicknameInput.type = 'hidden';
+    nicknameInput.name = 'nickname';
+    nicknameInput.value = nickname;
+
+    const ageInput = document.createElement('input');
+    ageInput.type = 'hidden';
+    ageInput.name = 'age';
+    ageInput.value = age;
+
+    // 폼에 입력 필드 추가
+    form.appendChild(emailInput);
+    form.appendChild(nicknameInput);
+    form.appendChild(ageInput);
+
+    // 폼을 문서에 추가하고 제출
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
 
 </html>
