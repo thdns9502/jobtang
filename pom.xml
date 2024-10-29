@@ -209,6 +209,15 @@
 				</configuration>
 			</plugin>
 			
+			<!-- 파일업로드 자바 설정  -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>	
+					
         </plugins>
     </build>
 </project>
