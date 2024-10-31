@@ -44,11 +44,13 @@ public class HomeController {
 		return "login/naverCallback";
 	}
 	
+	//도현
 	@GetMapping(value = "/uploadTest")
 	public void uploadTest() {	
 		System.out.println("upload form");
 	}
 	
+	//도현
 	@PostMapping("/uploadAction")
 	public void uploadAction( MultipartFile[] uploadFile, Model model ) {
 	
@@ -67,6 +69,40 @@ public class HomeController {
 				System.out.println("/uploadAction 오류 :" + e.getMessage());
 			}
 		}
+	}
+	
+	//도현
+	@GetMapping("/uploadAjax")
+	public void uploadAjax() {
+		logger.info("upload ajax");
+	}
+	
+	//도현
+	@PostMapping("/uploadAjaxAction")
+	public void uploadAjaxPost(MultipartFile[] uploadFile) {
+		logger.info("updata ajax post -------------");
+		
+		String uploadFolder = "C:\\upload";
+		
+		for (MultipartFile multipartFile : uploadFile) {
+			logger.info("----------------------------------");
+			logger.info("Upload File Name : " + multipartFile.getOriginalFilename() );
+			logger.info("Upload File Size : " + multipartFile.getSize() );
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+			
+			logger.info("only file name : " + uploadFileName);
+			
+			File saveFile = new File(uploadFolder, uploadFileName);
+			
+			try {
+				multipartFile.transferTo(saveFile);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+		}	
 	}
 	
 	

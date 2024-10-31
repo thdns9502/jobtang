@@ -8,9 +8,8 @@
 </head>
 <body>
 <form action = "uploadAction" method = "post" enctype = "multipart/form-data">
-<input type = "file" name = "uploadFile" multiple>
-<button>전송</button>
-
+	<input type = "file" name = "uploadFile" multiple>
+	<button>전송</button>
 </form>
 
 
