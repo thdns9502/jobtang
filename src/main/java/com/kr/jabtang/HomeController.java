@@ -6,28 +6,31 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
 
 
-
 @Controller
-@Log4j
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -84,24 +87,24 @@ public class HomeController {
 	}
 	
 	//도현
-	@PostMapping("/uploadAjaxAction")
-	public void uploadAjaxPost(MultipartFile[] uploadFile) {
-		logger.info("updata ajax post -------------");		
+	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile){
+		List<AttachFileDTO> list = new ArrayList<>();		
 		String uploadFolder = "C:\\upload";
 		
+		String uploadFolderPath = getFolder();
+		
 		// make folder ----
-		File uploadPath = new File(uploadFolder, getFolder());
-		logger.info("upload path : " + uploadPath);
+		File uploadPath = new File(uploadFolder, uploadFolderPath);
 		
 		if(uploadPath.exists() == false) {
 			uploadPath.mkdirs();
 		}
-		
-		
+				
 		for (MultipartFile multipartFile : uploadFile) {
-			logger.info("----------------------------------");
-			logger.info("Upload File Name : " + multipartFile.getOriginalFilename() );
-			logger.info("Upload File Size : " + multipartFile.getSize() );
+			
+			AttachFileDTO attachDTO = new AttachFileDTO();
 			
 			String uploadFileName = multipartFile.getOriginalFilename();
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
@@ -118,15 +121,20 @@ public class HomeController {
 				
 				//check image type file
 				if (checkImageType(saveFile)) {
+					attachDTO.setImage(true);
 					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
 					thumbnail.close();
 				}
 				
+				// add to List
+				list.add(attachDTO);
+				
 			} catch (Exception e) {
-				logger.error(e.getMessage());
+				e.getMessage();
 			}
 		}	
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
 	//도현
@@ -147,6 +155,7 @@ public class HomeController {
 		}
 		return false;
 	}
+	
 	
 }
 
