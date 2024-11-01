@@ -2,6 +2,7 @@ package com.kr.jabtang;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -84,6 +85,15 @@ public class HomeController {
 		
 		String uploadFolder = "C:\\upload";
 		
+		// make folder ----
+		File uploadPath = new File(uploadFolder, getFolder());
+		logger.info("upload path : " + uploadPath);
+		
+		if(uploadPath.exists() == false) {
+			uploadPath.mkdirs();
+		}
+		
+		
 		for (MultipartFile multipartFile : uploadFile) {
 			logger.info("----------------------------------");
 			logger.info("Upload File Name : " + multipartFile.getOriginalFilename() );
@@ -95,7 +105,9 @@ public class HomeController {
 			
 			logger.info("only file name : " + uploadFileName);
 			
-			File saveFile = new File(uploadFolder, uploadFileName);
+			//File saveFile = new File(uploadFolder, uploadFileName);
+
+			File saveFile = new File(uploadPath, uploadFileName);
 			
 			try {
 				multipartFile.transferTo(saveFile);
@@ -103,6 +115,14 @@ public class HomeController {
 				logger.error(e.getMessage());
 			}
 		}	
+	}
+	
+	//도현
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String str = sdf.format(date);
+		return str.replace("-", File.separator);
 	}
 	
 	
