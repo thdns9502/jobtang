@@ -1,6 +1,9 @@
 package com.kr.jabtang;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 
 
@@ -82,8 +86,7 @@ public class HomeController {
 	//도현
 	@PostMapping("/uploadAjaxAction")
 	public void uploadAjaxPost(MultipartFile[] uploadFile) {
-		logger.info("updata ajax post -------------");
-		
+		logger.info("updata ajax post -------------");		
 		String uploadFolder = "C:\\upload";
 		
 		// make folder ----
@@ -101,20 +104,25 @@ public class HomeController {
 			logger.info("Upload File Size : " + multipartFile.getSize() );
 			
 			String uploadFileName = multipartFile.getOriginalFilename();
-			
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-			
 			logger.info("only file name : " + uploadFileName);
 			
 			UUID uuid = UUID.randomUUID();
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 			
 			//File saveFile = new File(uploadFolder, uploadFileName);
-
-			File saveFile = new File(uploadPath, uploadFileName);
-			
+			//File saveFile = new File(uploadPath, uploadFileName);
 			try {
+				File saveFile = new File(uploadPath, uploadFileName);
 				multipartFile.transferTo(saveFile);
+				
+				//check image type file
+				if (checkImageType(saveFile)) {
+					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+					thumbnail.close();
+				}
+				
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
@@ -129,6 +137,16 @@ public class HomeController {
 		return str.replace("-", File.separator);
 	}
 	
+	//도현
+	private boolean checkImageType(File file) {
+		try{
+			String contentType = Files.probeContentType(file.toPath());
+			return contentType.startsWith("image");
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 }
 
