@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 도현 업로드 코드 때문에 주석 처리
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+ -->
+ <!-- web.xml을 이용하여 첨부파일설정  -->
+ <web-app
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns = "http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee https://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+ 
 
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
@@ -23,6 +31,16 @@
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+	
+		<!-- web.xml이용 첨부파일 설정 도현 -->
+		<multipart-config>
+			<location>C:\\upload\\temp</location> <!-- 저장 공간 -->
+			<max-file-size>20971520</max-file-size> <!-- 1MB * 20 / 파일 크기-->
+			<max-request-size>41943040</max-request-size> <!-- 40MB / 파일 최대 크기-->
+			<file-size-threshold>20971520</file-size-threshold> <!-- 20MB / 특정 사이지의 메모리 사용-->
+		</multipart-config>	
+	
+	
 	</servlet>
 		
 	<servlet-mapping>
