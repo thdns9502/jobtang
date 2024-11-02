@@ -19,7 +19,7 @@
   function naverSignInCallback() {
     // alert(naver_id_login.getProfileData('email'));
     //alert(naver_id_login.getProfileData('nickname'));
-    // alert(naver_id_login.getProfileData('age'));
+    //alert(naver_id_login.getProfileData('age'));
     
     const email = naver_id_login.getProfileData('email');
     const nickname = naver_id_login.getProfileData('nickname');
