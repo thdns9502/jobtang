@@ -11,7 +11,7 @@
 		background-color : gray; 
 	}
 	.uploadResult ul {
-		dispaly : flex;
+		display : flex;
 		flex-flow : row;
 		justify-content : center;
 		align-items : center;
@@ -21,7 +21,7 @@
 		padding : 10px;
 	}
 	.uploadResult ul li img {
-		width : 20px;
+		width : 100px;
 	}
 </style>
 </head>
@@ -100,29 +100,20 @@
 	var uploadResult = $(".uploadResult ul");
 	
 	function showUploadedFile(uploadResultArr){
-		var str ="";
-		$(uploadResultArr).each(function(i, obj){
-			str += "<li>" + obj.fileName + "<li>";
-		});
-		uploadResult.append(str);
-	}
-</script>
-
-<script>
-	function showUploadedFile(uploadResultArr){
 		var str = "";
 		$(uploadResultArr).each(
 			function(i,obj){
 				if(!obj.image){
-					str += "<li><img src='/resources/imgs/attach.png'>" + obj.fileName + "<li>";
+					str += "<li><img src='/resources/imgs/attach.png'>" + obj.fileName + "</li>";
 				} else {
-					str +="<li>" + obj.fileName + "</li>";
+					//str +="<li>" + obj.fileName + "</li>";
+					var fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" +obj.fileName);
+					str += "<li><img src='/display?fileName="+fileCallPath+"'></li>";
 				}
 			});
 		uploadResult.append(str);
 	}
 </script>
-
 
 </body>
 </html>
