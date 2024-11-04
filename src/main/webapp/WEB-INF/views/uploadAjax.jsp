@@ -5,6 +5,25 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	.uploadResult {
+		width : 100%;
+		background-color : gray; 
+	}
+	.uploadResult ul {
+		dispaly : flex;
+		flex-flow : row;
+		justify-content : center;
+		align-items : center;
+	}
+	.uploadResult ul li {
+		list-style : none;
+		padding : 10px;
+	}
+	.uploadResult ul li img {
+		width : 20px;
+	}
+</style>
 </head>
 <body>
 
@@ -85,6 +104,21 @@
 		$(uploadResultArr).each(function(i, obj){
 			str += "<li>" + obj.fileName + "<li>";
 		});
+		uploadResult.append(str);
+	}
+</script>
+
+<script>
+	function showUploadedFile(uploadResultArr){
+		var str = "";
+		$(uploadResultArr).each(
+			function(i,obj){
+				if(!obj.image){
+					str += "<li><img src='/resources/imgs/attach.png'>" + obj.fileName + "<li>";
+				} else {
+					str +="<li>" + obj.fileName + "</li>";
+				}
+			});
 		uploadResult.append(str);
 	}
 </script>
