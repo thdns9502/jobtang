@@ -37,8 +37,8 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "/main", method = RequestMethod.POST)
-	public String home(Model model, NaverUserDTO naver) {	
-		model.addAttribute("nickname", naver.getNickname());
+	public String home(Model model, UserDTO user) {	
+		model.addAttribute("nickname", user.getNickname());
 		return "home";
 	}
 
