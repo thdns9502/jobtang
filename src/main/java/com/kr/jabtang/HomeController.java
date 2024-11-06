@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
-
+import org.springframework.http.HttpHeaders;
 
 @Controller
 public class HomeController {
@@ -37,8 +37,8 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "/main", method = RequestMethod.POST)
-	public String home(Model model, NaverUserDTO naver) {	
-		model.addAttribute("nickname", naver.getNickname());
+	public String home(Model model, UserDTO user) {	
+		model.addAttribute("nickname", user.getNickname());
 		return "home";
 	}
 
@@ -119,10 +119,12 @@ public class HomeController {
 				File saveFile = new File(uploadPath, uploadFileName);
 				multipartFile.transferTo(saveFile);
 				
+				attachDTO.setUuid(uuid.toString());
+				attachDTO.setUploadPath(uploadFolderPath);
 				//check image type file
 				if (checkImageType(saveFile)) {
 					attachDTO.setImage(true);
-					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
+					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));					
 					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
 					thumbnail.close();
 				}
@@ -154,6 +156,24 @@ public class HomeController {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	//도현
+	@GetMapping("/display")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(String fileName){
+		logger.info(fileName);
+		File file = new File("c:\\upload\\" + fileName);
+		logger.info("file : " + file);
+		ResponseEntity<byte[]> result = null;
+		try {
+			HttpHeaders header = new HttpHeaders();
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	
